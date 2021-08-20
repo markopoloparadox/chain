@@ -43,6 +43,9 @@ jobs:
     - name: Setup toolchain
       run: ./scripts/init.sh
 
+    - name: Cargo cleanup
+      run: cargo clean
+
     - name: Run tests
       run: cargo test --all-targets --all-features --workspace
 
