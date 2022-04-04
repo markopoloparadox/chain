@@ -21,8 +21,30 @@ jobs:
     runs-on: ubuntu-latest
     name: Build Wasm files
     steps:
+    - uses: hecrj/setup-rust-action@v1
+    - uses: actions/checkout@v3
+
+    - name: Setup Rust toolchain
+      run: rustup show
+
+    - name: Install srtool
+      run: cargo install --git https://github.com/chevdor/srtool-cli
+
+    - name: Create downloads folder
+      run: mkdir -p downloads
+ 
+    - name: Run Srtool 
+      run: srtool build --package "$Runtime"-runtime &> downloads/output.txt
+
     - name: Move wasm files
       run: |
-        echo $Runtime
-        echo "$Runtime"
-        echo ${Runtime}
+
+        cp ./runtime/"$Runtime"/target/srtool/release/wbuild/"$Runtime"-runtime/"$Runtime"_runtime.compact.compressed.wasm /downloads/"$Runtime"_runtime.compact.compressed.wasm
+        cp ./runtime/"$Runtime"/target/srtool/release/wbuild/"$Runtime"-runtime/"$Runtime"_runtime.compact.wasm /downloads/"$Runtime"_runtime.compact.wasm
+        cp ./runtime/"$Runtime"/target/srtool/release/wbuild/"$Runtime"-runtime/"$Runtime"_runtime.wasm /downloads/"$Runtime"_runtime.wasm
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: assets-for-download
+        path: downloads
