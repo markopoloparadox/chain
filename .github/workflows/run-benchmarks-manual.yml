@@ -12,6 +12,10 @@ on:
         - mainnet
         - chaosnet
 
+env:
+  CARGO_TERM_COLOR: always
+  Runtime: ${{ github.event.inputs.runtime }}
+
 jobs:
   run-benchmarks:
     runs-on: ubuntu-latest
@@ -23,7 +27,7 @@ jobs:
       run: /root/.cargo/bin/cargo build --release --features runtime-benchmarks
 
     - name: Run benchmarks
-      run: ./scripts/benchmarks/alphanet/run_benchmarks.sh
+      run: ./scripts/benchmarks/"$Runtime"/run_benchmarks.sh
 
     - name: Switch to a new branch
       run: git checkout -b github/benchmarks
