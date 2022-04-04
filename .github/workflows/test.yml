@@ -1,0 +1,22 @@
+name: Test WOrkflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch
+
+env:
+  CARGO_TERM_COLOR: always
+  Runtime: ${{ github.event.inputs.runtime }}
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    name: Test Job
+    steps:
+    - uses: hecrj/setup-rust-action@v1
+    - uses: actions/checkout@v3
+
+    - name: Echo world!
+      run: echo Hello World!
